@@ -476,7 +476,7 @@ def getColor(rgb=None, hsv=None):
     |colorcubes| |colorcubes.py|_
     """
     # recursion, return a list if input is list of colors:
-    if _isSequence(rgb) and (len(rgb) > 3 or _isSequence(rgb[0])):
+    if _isSequence(rgb) and (len(rgb) > 4 or _isSequence(rgb[0])):
         seqcol = []
         for sc in rgb:
             seqcol.append(getColor(sc))

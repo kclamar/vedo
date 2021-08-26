@@ -1991,11 +1991,19 @@ class Spheres(Mesh):
         if cisseq:
             glyph.SetColorModeToColorByScalar()
             ucols = vtk.vtkUnsignedCharArray()
-            ucols.SetNumberOfComponents(3)
-            ucols.SetName("Colors")
-            for acol in c:
-                cx, cy, cz = getColor(acol)
-                ucols.InsertNextTuple3(cx * 255, cy * 255, cz * 255)
+            nc = np.array(c).shape[1]
+            if nc == 3:
+                ucols.SetNumberOfComponents(3)
+                ucols.SetName("Colors")
+                for acol in c:
+                    cx, cy, cz = getColor(acol)
+                    ucols.InsertNextTuple3(cx * 255, cy * 255, cz * 255)
+            elif nc == 4:
+                ucols.SetNumberOfComponents(4)
+                ucols.SetName("Points_RGBA")
+                for acol in c:
+                    cx, cy, cz, ca = getColor(acol)
+                    ucols.InsertNextTuple4(cx * 255, cy * 255, cz * 255, ca)
             pd.GetPointData().SetScalars(ucols)
             glyph.ScalingOff()
         elif risseq:
@@ -2008,7 +2016,7 @@ class Spheres(Mesh):
 
         glyph.SetInputData(pd)
         glyph.Update()
-
+        print(alpha)
         Mesh.__init__(self, glyph.GetOutput(), alpha=alpha)
         self.phong()
         if cisseq:
